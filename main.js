@@ -129,12 +129,35 @@ function switchTab(name, btn) {
 }
 
 // FORM SUBMIT
+function showSubmitToast(message = 'Postulación enviada') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
 function submitForm(e) {
   e.preventDefault();
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
+  showSubmitToast();
   e.target.reset();
-  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function submitApplication(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const data = new FormData(form);
+  const role = data.get('Rol') || 'Postulación';
+  const subject = encodeURIComponent(`Postulación Zelestia - ${role}`);
+  const body = encodeURIComponent(
+    Array.from(data.entries())
+      .filter(([key]) => !key.startsWith('_'))
+      .map(([key, value]) => `${key}: ${value || 'No especificado'}`)
+      .join('\n')
+  );
+
+  window.location.href = `mailto:zelestia.sts@gmail.com?subject=${subject}&body=${body}`;
+  showSubmitToast('Abriendo correo');
 }
 
 // CARRITO
