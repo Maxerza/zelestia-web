@@ -142,22 +142,36 @@ function submitForm(e) {
   e.target.reset();
 }
 
-function submitApplication(e) {
+async function submitApplication(e) {
   e.preventDefault();
 
   const form = e.target;
+  const submitButton = form.querySelector('button[type="submit"]');
   const data = new FormData(form);
-  const role = data.get('Rol') || 'Postulación';
-  const subject = encodeURIComponent(`Postulación Zelestia - ${role}`);
-  const body = encodeURIComponent(
-    Array.from(data.entries())
-      .filter(([key]) => !key.startsWith('_'))
-      .map(([key, value]) => `${key}: ${value || 'No especificado'}`)
-      .join('\n')
-  );
+  const payload = Object.fromEntries(data.entries());
 
-  window.location.href = `mailto:zelestia.sts@gmail.com?subject=${subject}&body=${body}`;
-  showSubmitToast('Abriendo correo');
+  if (submitButton) submitButton.disabled = true;
+  showSubmitToast('Enviando postulación');
+
+  try {
+    const response = await fetch('/.netlify/functions/applications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      throw new Error(result.message || 'No se pudo enviar la postulación.');
+    }
+
+    form.reset();
+    showSubmitToast('Postulación recibida');
+  } catch (error) {
+    showSubmitToast(error.message || 'Error al enviar');
+  } finally {
+    if (submitButton) submitButton.disabled = false;
+  }
 }
 
 // CARRITO
