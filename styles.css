@@ -239,8 +239,8 @@ section { position:relative; z-index:1; }
 }
 .team-header { text-align:center; margin-bottom:70px; }
 .team-grid {
-  display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap:24px; max-width:1200px; margin:0 auto;
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap:24px; max-width:620px; margin:0 auto;
 }
 .team-card {
   background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02)); border:1px solid var(--border);
