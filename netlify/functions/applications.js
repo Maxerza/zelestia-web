@@ -11,7 +11,7 @@ function json(statusCode, payload) {
 }
 
 function sanitizeApplication(input) {
-  const allowedRoles = new Set(['Programador', 'Animador', 'Ilustrador']);
+  const allowedRoles = new Set(['Programador', 'Animador', 'Ilustrador', 'Doblaje de voz']);
   const app = {
     role: String(input.Rol || '').trim(),
     name: String(input.Nombre || '').trim(),
