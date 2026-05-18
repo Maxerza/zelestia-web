@@ -59,7 +59,10 @@ async function sendApplicationEmail(app) {
 
   if (!response.ok) {
     const detail = await response.text();
-    throw new Error(`No se pudo enviar el correo: ${detail}`);
+    if (response.status === 403 && detail.includes('verify a domain')) {
+      throw new Error('El correo de postulaciones necesita un dominio verificado en Resend.');
+    }
+    throw new Error('No se pudo enviar el correo de postulación.');
   }
 }
 
